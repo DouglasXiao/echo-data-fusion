@@ -1,19 +1,23 @@
+import path from "path";
+import { fileURLToPath } from 'url';
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import ReactRefreshPlugin from "@rspack/plugin-react-refresh";
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = {
-  entry: './src/main.tsx',
-  mode: 'development',
+const config = {
+  entry: "./src/main.tsx",
+  mode: "development",
   devServer: {
-    host: '::',
+    host: "::",
     port: 8080,
     historyApiFallback: true,
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    extensions: [".tsx", ".ts", ".jsx", ".js"],
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   module: {
@@ -21,16 +25,16 @@ module.exports = {
       {
         test: /\.(ts|tsx)$/,
         use: {
-          loader: 'builtin:swc-loader',
+          loader: "builtin:swc-loader",
           options: {
             jsc: {
               parser: {
-                syntax: 'typescript',
+                syntax: "typescript",
                 tsx: true,
               },
               transform: {
                 react: {
-                  runtime: 'automatic',
+                  runtime: "automatic",
                 },
               },
             },
@@ -39,23 +43,25 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: "./index.html",
     }),
-    process.env.NODE_ENV === 'development' && new (require('@rspack/plugin-react-refresh'))(),
+    process.env.NODE_ENV === "development" && new ReactRefreshPlugin(),
   ].filter(Boolean),
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
     clean: true,
   },
 };
+
+export default config;
